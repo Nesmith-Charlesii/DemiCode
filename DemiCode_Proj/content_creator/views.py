@@ -29,3 +29,12 @@ class CreatorDetail(APIView):
         creator = Creative.objects.get(pk=pk)
         serializer = CreativeSerializer(creator)
         return Response(serializer.data)
+
+    @staticmethod
+    def put(request, pk):
+        creator = Creative.objects.get(pk=pk)
+        serializer = CreativeSerializer(creator, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
