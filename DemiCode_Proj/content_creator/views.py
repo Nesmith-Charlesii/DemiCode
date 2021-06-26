@@ -7,3 +7,9 @@ from rest_framework import status
 
 
 # Create your views here.
+class CreatorList(APIView):
+    @staticmethod
+    def get(request):
+        creator = Creative.objects.all()
+        serializer = CreativeSerializer(creator, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
