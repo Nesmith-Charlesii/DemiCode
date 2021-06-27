@@ -161,3 +161,42 @@ class ReviewDetail(APIView):
         review = Review.objects.get(pk=pk)
         review.delete()
         return Response(status=status.HTTP_200_OK)
+
+
+class Code_SnippetList(APIView):
+    @staticmethod
+    def post(request):
+        serializer = Code_SnippetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def get(request):
+        snippets = Code_Snippet.objects.all()
+        serializer = Code_SnippetSerializer(snippets, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class Code_SnippetDetail(APIView):
+    @staticmethod
+    def get(request, pk):
+        snippet = Code_Snippet.objects.get(pk=pk)
+        serializer = Code_SnippetSerializer(snippet)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @staticmethod
+    def put(request, pk):
+        snippet = Code_Snippet.objects.get(pk=pk)
+        serializer = Code_SnippetSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def delete(request, pk):
+        snippet = Code_Snippet.objects.get(pk=pk)
+        snippet.delete()
+        return Response(status=status.HTTP_200_OK)
