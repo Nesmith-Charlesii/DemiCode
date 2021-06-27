@@ -83,3 +83,42 @@ class BlogDetail(APIView):
         creator = Blog.objects.get(pk=pk)
         creator.delete()
         return Response(status=status.HTTP_200_OK)
+
+
+class Digital_ProductList(APIView):
+    @staticmethod
+    def post(request):
+        serializer = Digital_ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def get(request):
+        blogs = Digital_Product.objects.all()
+        serializer = Digital_ProductSerializer(blogs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class Digital_ProductDetail(APIView):
+    @staticmethod
+    def get(request, pk):
+        blog = Digital_Product.objects.get(pk=pk)
+        serializer = Digital_ProductSerializer(blog)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @staticmethod
+    def put(request, pk):
+        creator = Digital_Product.objects.get(pk=pk)
+        serializer = Digital_ProductSerializer(creator, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def delete(request, pk):
+        creator = Digital_Product.objects.get(pk=pk)
+        creator.delete()
+        return Response(status=status.HTTP_200_OK)
