@@ -29,7 +29,7 @@ class VideoSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ['id', 'comment', 'anon_name', 'likes', 'creator', 'blog', 'created_at', 'updated_at']
+        fields = ['id', 'comment', 'anon_name', 'Thumbs_Upped', 'Likes', 'creator', 'blog', 'created_at', 'updated_at']
 
 
 class Code_SnippetSerializer(serializers.ModelSerializer):

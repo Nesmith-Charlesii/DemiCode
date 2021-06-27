@@ -46,9 +46,11 @@ class Digital_Product(models.Model):
 
 class Review(models.Model):
     comment = models.CharField(max_length=100)
-    anon_name = models.CharField(max_length=50, null=True, default="anonymous")
-    likes = models.ManyToManyField(Creative, related_name="likes", null=True)
-    creator = models.ForeignKey(Creative, related_name="comments", null=True, on_delete=models.CASCADE)
+    anon_name = models.CharField(max_length=50, null=True, blank=True)
+    # ManyToManyField represented with an empty array in JSON
+    Thumbs_Upped = models.ManyToManyField(Creative, related_name="likes", null=True, blank=True)
+    Likes = models.IntegerField(null=True, blank=True)
+    creator = models.ForeignKey(Creative, related_name="comments", null=True, blank=True, on_delete=models.CASCADE)
     blog = models.ForeignKey(Blog, related_name="reviews", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
