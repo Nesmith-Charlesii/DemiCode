@@ -7,5 +7,7 @@ urlpatterns = [
     path('blog_content/', views.BlogList.as_view()),
     path('blog_content/<int:pk>/', views.BlogDetail.as_view()),
     path('digital_products/', views.Digital_ProductList.as_view()),
-    path('digital_product/<int:pk>/', views.Digital_ProductDetail.as_view())
+    path('digital_product/<int:pk>/', views.Digital_ProductDetail.as_view()),
+    path('reviews/', views.Digital_ProductList.as_view()),
+    path('review/<int:pk>/', views.Digital_ProductDetail.as_view())
 ]

@@ -10,8 +10,8 @@ from rest_framework import status
 class CreatorList(APIView):
     @staticmethod
     def get(request):
-        creator = Creative.objects.all()
-        serializer = CreativeSerializer(creator, many=True)
+        creators = Creative.objects.all()
+        serializer = CreativeSerializer(creators, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @staticmethod
@@ -71,8 +71,8 @@ class BlogDetail(APIView):
 
     @staticmethod
     def put(request, pk):
-        creator = Blog.objects.get(pk=pk)
-        serializer = BlogSerializer(creator, data=request.data)
+        blog = Blog.objects.get(pk=pk)
+        serializer = BlogSerializer(blog, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -80,8 +80,8 @@ class BlogDetail(APIView):
 
     @staticmethod
     def delete(request, pk):
-        creator = Blog.objects.get(pk=pk)
-        creator.delete()
+        blog = Blog.objects.get(pk=pk)
+        blog.delete()
         return Response(status=status.HTTP_200_OK)
 
 
@@ -96,22 +96,22 @@ class Digital_ProductList(APIView):
 
     @staticmethod
     def get(request):
-        blogs = Digital_Product.objects.all()
-        serializer = Digital_ProductSerializer(blogs, many=True)
+        products = Digital_Product.objects.all()
+        serializer = Digital_ProductSerializer(products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class Digital_ProductDetail(APIView):
     @staticmethod
     def get(request, pk):
-        blog = Digital_Product.objects.get(pk=pk)
-        serializer = Digital_ProductSerializer(blog)
+        product = Digital_Product.objects.get(pk=pk)
+        serializer = Digital_ProductSerializer(product)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @staticmethod
     def put(request, pk):
-        creator = Digital_Product.objects.get(pk=pk)
-        serializer = Digital_ProductSerializer(creator, data=request.data)
+        product = Digital_Product.objects.get(pk=pk)
+        serializer = Digital_ProductSerializer(product, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -119,6 +119,45 @@ class Digital_ProductDetail(APIView):
 
     @staticmethod
     def delete(request, pk):
-        creator = Digital_Product.objects.get(pk=pk)
-        creator.delete()
+        product = Digital_Product.objects.get(pk=pk)
+        product.delete()
+        return Response(status=status.HTTP_200_OK)
+
+
+class ReviewList(APIView):
+    @staticmethod
+    def post(request):
+        serializer = ReviewSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def get(request):
+        reviews = Review.objects.all()
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ReviewDetail(APIView):
+    @staticmethod
+    def get(request, pk):
+        review = Review.objects.get(pk=pk)
+        serializer = ReviewSerializer(review)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @staticmethod
+    def put(request, pk):
+        review = Review.objects.get(pk=pk)
+        serializer = ReviewSerializer(review, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def delete(request, pk):
+        review = Review.objects.get(pk=pk)
+        review.delete()
         return Response(status=status.HTTP_200_OK)
