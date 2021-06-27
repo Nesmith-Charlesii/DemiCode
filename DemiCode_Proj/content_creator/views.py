@@ -68,3 +68,18 @@ class BlogDetail(APIView):
         blog = Blog.objects.get(pk=pk)
         serializer = BlogSerializer(blog)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @staticmethod
+    def put(request, pk):
+        creator = Blog.objects.get(pk=pk)
+        serializer = BlogSerializer(creator, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def delete(request, pk):
+        creator = Blog.objects.get(pk=pk)
+        creator.delete()
+        return Response(status=status.HTTP_200_OK)
