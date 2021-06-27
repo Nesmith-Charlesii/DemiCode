@@ -44,3 +44,19 @@ class CreatorDetail(APIView):
         creator = Creative.objects.get(pk=pk)
         creator.delete()
         return Response(status=status.HTTP_200_OK)
+
+
+class BlogList(APIView):
+    @staticmethod
+    def post(request):
+        serializer = BlogSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def get(request):
+        blogs = Blog.objects.all()
+        serializer = BlogSerializer(blogs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
