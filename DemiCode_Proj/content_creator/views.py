@@ -60,3 +60,11 @@ class BlogList(APIView):
         blogs = Blog.objects.all()
         serializer = BlogSerializer(blogs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class BlogDetail(APIView):
+    @staticmethod
+    def get(request, pk):
+        blog = Blog.objects.get(pk=pk)
+        serializer = BlogSerializer(blog)
+        return Response(serializer.data, status=status.HTTP_200_OK)
