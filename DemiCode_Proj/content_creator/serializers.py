@@ -5,7 +5,7 @@ from .models import Creative, Blog, Digital_Product, Video, Review, Code_Snippet
 class CreativeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Creative
-        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'confirmPW', 'debit_card', 'photo_upload', 'created_at', 'updated_at']
+        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'debit_card', 'photo_upload', 'created_at', 'updated_at']
 
 
 class BlogSerializer(serializers.ModelSerializer):

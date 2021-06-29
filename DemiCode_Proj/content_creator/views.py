@@ -4,6 +4,8 @@ from .serializers import CreativeSerializer, BlogSerializer, Digital_ProductSeri
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth.hashers import make_password, check_password
+import bcrypt
 
 
 # Create your views here.
@@ -16,9 +18,12 @@ class CreatorList(APIView):
 
     @staticmethod
     def post(request):
+        hashed_Password = bcrypt.hashpw(request.data["password"].encode(), bcrypt.gensalt()).decode()
+        request.data["password"] = hashed_Password
         serializer = CreativeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            print(serializer.validated_data["password"])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -240,3 +245,17 @@ class VideoDetail(APIView):
         video = Video.objects.get(pk=pk)
         video.delete()
         return Response(status=status.HTTP_200_OK)
+
+
+class LoginList(APIView):
+    @staticmethod
+    def post(request):
+        print(request.data)
+        # Use .get to access a single object's properties. .filter will return a queryset
+        user = Creative.objects.get(username=request.data["username"])
+        print('USER', user.username)
+        if bcrypt.checkpw(request.data['password'].encode(), user.password.encode()):
+            print(True)
+        else:
+            print(False)
+        return Response(request.data)

@@ -13,5 +13,6 @@ urlpatterns = [
     path('code_snippets/', views.Code_SnippetList.as_view()),
     path('code_snippet/<int:pk>/', views.Code_SnippetDetail.as_view()),
     path('videos/', views.VideoList.as_view()),
-    path('video/<int:pk>/', views.VideoDetail.as_view())
+    path('video/<int:pk>/', views.VideoDetail.as_view()),
+    path('authenticate/', views.LoginList.as_view())
 ]
