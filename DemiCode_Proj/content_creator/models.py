@@ -9,7 +9,7 @@ class Image(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __repr__(self):
-        return f'Content Creator: {self.User.name} '
+        return f'Content Creator: {self.User} '
 
 
 class Bank(models.Model):
@@ -19,7 +19,7 @@ class Bank(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __repr__(self):
-        return f'Content Creator: {self.User.name}'
+        return f'Content Creator: {self.User}'
 
 
 class Blog(models.Model):
@@ -27,7 +27,7 @@ class Blog(models.Model):
     # TextField increases in size. Does not need a max limit
     content = models.TextField()
     header_image = models.ImageField(upload_to='images/', null=True)
-    creator = models.ForeignKey(User, related_name="articles", on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, related_name="articles", on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
