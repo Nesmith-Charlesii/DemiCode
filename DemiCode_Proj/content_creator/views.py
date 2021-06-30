@@ -1,14 +1,37 @@
 from django.shortcuts import render
-from .models import Creative, Blog, Digital_Product, Review, Video, Code_Snippet
-from .serializers import CreativeSerializer, BlogSerializer, Digital_ProductSerializer, ReviewSerializer, VideoSerializer, Code_SnippetSerializer
+from .models import Image, Bank, Blog, Digital_Product, Review, Video, Code_Snippet
+from .serializers import ImageSerializer, BankSerializer, BlogSerializer, Digital_ProductSerializer, ReviewSerializer, VideoSerializer, Code_SnippetSerializer, UserSerializer, UserSerializerWithToken
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.hashers import make_password, check_password
+from rest_framework import status, permissions
+from django.contrib.auth.models import User
+from rest_framework.decorators import api_view
 import bcrypt
 
 
-# Create your views here.
+@api_view(['GET'])
+def current_user(request):
+    # Determine current user by their token.
+    serializer = UserSerializer(request.user)
+    print(serializer)
+    return Response(serializer.data)
+
+
+# REGISTER USER
+class UserList(APIView):
+
+    permission_classes = [permissions.AllowAny]
+
+    @staticmethod
+    def post(request, format=None):
+        serializer = UserSerializerWithToken(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            print(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class CreatorList(APIView):
     @staticmethod
     def get(request):
