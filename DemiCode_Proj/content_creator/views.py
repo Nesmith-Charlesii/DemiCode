@@ -1,3 +1,4 @@
+import stripe
 from django.shortcuts import render
 from .models import Image, Bank, Blog, Digital_Product, Review, Video, Code_Snippet
 from .serializers import ImageSerializer, BankSerializer, BlogSerializer, Digital_ProductSerializer, ReviewSerializer, VideoSerializer, Code_SnippetSerializer, UserSerializer, UserSerializerWithToken
@@ -8,7 +9,6 @@ from django.contrib.auth.models import User
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
-import bcrypt
 
 
 @api_view(['GET'])
@@ -17,6 +17,15 @@ def current_user(request):
     serializer = UserSerializer(request.user)
     print(serializer)
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+def test_payment(request):
+    test_payment_intent = stripe.PaymentIntent.create(
+        amount=1000, currency='usd',
+        payment_method_types=['card'],
+        receipt_email='test@example.com')
+    return Response(status=status.HTTP_200_OK, data=test_payment_intent)
 
 
 # REGISTER USER
@@ -33,6 +42,11 @@ class UserList(APIView):
             print(data['first_name'])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class BlogList(APIView):
@@ -78,7 +92,6 @@ class BlogDetail(APIView):
             blogSerializer.save()
             return Response(blogSerializer.data, status=status.HTTP_200_OK)
         return Response(blogSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
     def delete(self, request, pk):
         blog = Blog.objects.get(pk=pk)
@@ -145,7 +158,6 @@ class ReviewList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
     def get(self, request):
         reviews = Review.objects.all()
         serializer = ReviewSerializer(reviews, many=True)
@@ -159,7 +171,6 @@ class ReviewDetail(APIView):
         serializer = ReviewSerializer(review)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
     def put(self, request, pk):
         review = Review.objects.get(pk=pk)
         serializer = ReviewSerializer(review, data=request.data)
@@ -167,7 +178,6 @@ class ReviewDetail(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
     def delete(self, request, pk):
         review = Review.objects.get(pk=pk)
@@ -187,7 +197,6 @@ class Code_SnippetList(APIView):
             snippetSerializer.save()
             return Response(snippetSerializer.data, status=status.HTTP_201_CREATED)
         return Response(snippetSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
     def get(self, request):
         snippets = Code_Snippet.objects.all()
@@ -211,7 +220,6 @@ class Code_SnippetDetail(APIView):
         serializer = Code_SnippetSerializer(snippet)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
     def put(self, request, pk):
         snippet = Code_Snippet.objects.get(pk=pk)
         serializer = Code_SnippetSerializer(snippet, data=request.data)
@@ -219,7 +227,6 @@ class Code_SnippetDetail(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
     def delete(self, request, pk):
         snippet = Code_Snippet.objects.get(pk=pk)
@@ -275,16 +282,15 @@ class VideoDetail(APIView):
         video.delete()
         return Response(status=status.HTTP_200_OK)
 
-
-class LoginList(APIView):
-
-    def post(self, request):
-        print(request.data)
-        # Use .get to access a single object's properties. .filter will return a queryset
-        user = Creative.objects.get(username=request.data["username"])
-        print('USER', user.username)
-        if bcrypt.checkpw(request.data['password'].encode(), user.password.encode()):
-            print(True)
-        else:
-            print(False)
-        return Response(request.data)
+# class LoginList(APIView):
+#
+#     def post(self, request):
+#         print(request.data)
+#         # Use .get to access a single object's properties. .filter will return a queryset
+#         user = Creative.objects.get(username=request.data["username"])
+#         print('USER', user.username)
+#         if bcrypt.checkpw(request.data['password'].encode(), user.password.encode()):
+#             print(True)
+#         else:
+#             print(False)
+#         return Response(request.data)

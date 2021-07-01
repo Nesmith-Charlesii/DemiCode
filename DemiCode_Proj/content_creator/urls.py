@@ -19,8 +19,9 @@ urlpatterns = [
     path('videos/', views.VideoList.as_view()),
     path('videos_creator/all/', views.VideoList2.as_view()),
     path('video/<int:pk>/', views.VideoDetail.as_view()),
-    path('authenticate/', views.LoginList.as_view()),
+    # path('authenticate/', views.LoginList.as_view()),
     path('token-auth/', obtain_jwt_token),
     path('current_user/', views.current_user),
-    path('users/', views.UserList.as_view())
+    path('users/', views.UserList.as_view()),
+    path('test_payment/', views.test_payment)
 ]
