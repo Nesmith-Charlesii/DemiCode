@@ -54,7 +54,6 @@ class BlogList(APIView):
     def get(self, request):
         blogs = Blog.objects.all()
         serializer = BlogSerializer(blogs, many=True)
-        print(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -89,26 +88,39 @@ class BlogDetail(APIView):
 
 class Digital_ProductList(APIView):
 
-    def post(request):
-        serializer = Digital_ProductSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        userSerializer = UserSerializer(request.user)
+        user = userSerializer.data
+        print(f'Blog User Id', user['id'])
+        userId = User.objects.get(id=user['id'])
+        productSerializer = Digital_ProductSerializer(data=request.data)
+        if productSerializer.is_valid():
+            productSerializer.validated_data['seller'] = userId
+            productSerializer.save()
+            return Response(productSerializer.data, status=status.HTTP_201_CREATED)
+        return Response(productSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-    def get(request):
+    def get(self, request):
         products = Digital_Product.objects.all()
         serializer = Digital_ProductSerializer(products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class Digital_ProductList2(APIView):
+    def get(self, request):
+        userSerializer = UserSerializer(request.user)
+        user = userSerializer.data
+        products = Digital_Product.objects.filter(seller_id=user['id'])
+        productSerializer = Digital_ProductSerializer(products, many=True)
+        return Response(productSerializer.data, status=status.HTTP_200_OK)
+
+
 class Digital_ProductDetail(APIView):
 
-    def get(request, pk):
-        product = Digital_Product.objects.get(pk=pk)
-        serializer = Digital_ProductSerializer(product)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    # def get(request, pk):
+    #     product = Digital_Product.objects.get(pk=pk)
+    #     serializer = Digital_ProductSerializer(product)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
     def put(request, pk):
