@@ -58,8 +58,7 @@ class BlogList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class BlogDetail(APIView):
-
+class BlogList2(APIView):
     def get(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
@@ -69,13 +68,17 @@ class BlogDetail(APIView):
         return Response(blogSerializer.data, status=status.HTTP_200_OK)
 
 
+class BlogDetail(APIView):
     def put(self, request, pk):
-        blog = Blog.objects.get(pk=pk)
-        serializer = BlogSerializer(blog, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        userSerializer = UserSerializer(request.user)
+        user = userSerializer.data
+        userId = User.objects.get(id=user['id'])
+        blogSerializer = BlogSerializer(data=request.data)
+        if blogSerializer.is_valid():
+            blogSerializer.validated_data['creator'] = userId
+            blogSerializer.save()
+            return Response(blogSerializer.data, status=status.HTTP_200_OK)
+        return Response(blogSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
     def delete(self, request, pk):

@@ -40,7 +40,7 @@ class Digital_Product(models.Model):
     description = models.CharField(max_length=200)
     image = models.ImageField(upload_to='images/', null=True)
     price = models.FloatField()
-    seller = models.ForeignKey(User, related_name="products", on_delete=models.CASCADE)
+    seller = models.ForeignKey(User, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -67,7 +67,7 @@ class Code_Snippet(models.Model):
     title = models.CharField(max_length=50)
     text = models.TextField()
     upload = models.ImageField(upload_to='images/', null=True)
-    creator = models.ForeignKey(User, related_name="snippets", on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, related_name="snippets", on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -78,7 +78,7 @@ class Code_Snippet(models.Model):
 class Video(models.Model):
     title = models.CharField(max_length=50)
     video = models.FileField(upload_to='videos/')
-    creator = models.ForeignKey(User, related_name="videos", on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, related_name="videos", on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
