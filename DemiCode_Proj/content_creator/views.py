@@ -122,8 +122,7 @@ class Digital_ProductDetail(APIView):
     #     serializer = Digital_ProductSerializer(product)
     #     return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-    def put(request, pk):
+    def put(self, request, pk):
         product = Digital_Product.objects.get(pk=pk)
         serializer = Digital_ProductSerializer(product, data=request.data)
         if serializer.is_valid():
@@ -131,8 +130,7 @@ class Digital_ProductDetail(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-    def delete(request, pk):
+    def delete(self, request, pk):
         product = Digital_Product.objects.get(pk=pk)
         product.delete()
         return Response(status=status.HTTP_200_OK)
@@ -140,7 +138,7 @@ class Digital_ProductDetail(APIView):
 
 class ReviewList(APIView):
 
-    def post(request):
+    def post(self, request):
         serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -148,7 +146,7 @@ class ReviewList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-    def get(request):
+    def get(self, request):
         reviews = Review.objects.all()
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -179,15 +177,20 @@ class ReviewDetail(APIView):
 
 class Code_SnippetList(APIView):
 
-    def post(request):
-        serializer = Code_SnippetSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        userSerializer = UserSerializer(request.user)
+        user = userSerializer.data
+        print(f'Blog User Id', user['id'])
+        userId = User.objects.get(id=user['id'])
+        snippetSerializer = Code_SnippetSerializer(data=request.data)
+        if snippetSerializer.is_valid():
+            snippetSerializer.validated_data['seller'] = userId
+            snippetSerializer.save()
+            return Response(snippetSerializer.data, status=status.HTTP_201_CREATED)
+        return Response(snippetSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-    def get(request):
+    def get(self, request):
         snippets = Code_Snippet.objects.all()
         serializer = Code_SnippetSerializer(snippets, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -195,13 +198,13 @@ class Code_SnippetList(APIView):
 
 class Code_SnippetDetail(APIView):
 
-    def get(request, pk):
+    def get(self, request, pk):
         snippet = Code_Snippet.objects.get(pk=pk)
         serializer = Code_SnippetSerializer(snippet)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-    def put(request, pk):
+    def put(self, request, pk):
         snippet = Code_Snippet.objects.get(pk=pk)
         serializer = Code_SnippetSerializer(snippet, data=request.data)
         if serializer.is_valid():
@@ -210,7 +213,7 @@ class Code_SnippetDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-    def delete(request, pk):
+    def delete(self, request, pk):
         snippet = Code_Snippet.objects.get(pk=pk)
         snippet.delete()
         return Response(status=status.HTTP_200_OK)
@@ -218,7 +221,7 @@ class Code_SnippetDetail(APIView):
 
 class VideoList(APIView):
 
-    def post(request):
+    def post(self, request):
         serializer = VideoSerializer(data=request.data)
         if serializer.is_valid():
             print(serializer.data)
@@ -227,7 +230,7 @@ class VideoList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-    def get(request):
+    def get(self, request):
         videos = Video.objects.all()
         serializer = VideoSerializer(videos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -235,13 +238,13 @@ class VideoList(APIView):
 
 class VideoDetail(APIView):
 
-    def get(request, pk):
+    def get(self, request, pk):
         video = Video.objects.get(pk=pk)
         serializer = VideoSerializer(video)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-    def put(request, pk):
+    def put(self, request, pk):
         video = Video.objects.get(pk=pk)
         serializer = VideoSerializer(video, data=request.data)
         if serializer.is_valid():
@@ -250,7 +253,7 @@ class VideoDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-    def delete(request, pk):
+    def delete(self, request, pk):
         video = Video.objects.get(pk=pk)
         video.delete()
         return Response(status=status.HTTP_200_OK)
@@ -258,7 +261,7 @@ class VideoDetail(APIView):
 
 class LoginList(APIView):
 
-    def post(request):
+    def post(self, request):
         print(request.data)
         # Use .get to access a single object's properties. .filter will return a queryset
         user = Creative.objects.get(username=request.data["username"])
