@@ -1,4 +1,3 @@
-import stripe
 from django.shortcuts import render
 from .models import Image, Bank, Blog, Digital_Product, Review, Video, Code_Snippet
 from .serializers import ImageSerializer, BankSerializer, BlogSerializer, Digital_ProductSerializer, ReviewSerializer, VideoSerializer, Code_SnippetSerializer, UserSerializer, UserSerializerWithToken
@@ -9,6 +8,8 @@ from django.contrib.auth.models import User
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
+import stripe
+stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
 
 
 @api_view(['GET'])
@@ -19,16 +20,6 @@ def current_user(request):
     return Response(serializer.data)
 
 
-@api_view(['POST'])
-def test_payment(request):
-    test_payment_intent = stripe.PaymentIntent.create(
-        amount=1000, currency='usd',
-        payment_method_types=['card'],
-        receipt_email='test@example.com')
-    return Response(status=status.HTTP_200_OK, data=test_payment_intent)
-
-
-# REGISTER USER
 class UserList(APIView):
 
     permission_classes = [permissions.AllowAny]
@@ -282,15 +273,26 @@ class VideoDetail(APIView):
         video.delete()
         return Response(status=status.HTTP_200_OK)
 
-# class LoginList(APIView):
-#
-#     def post(self, request):
-#         print(request.data)
-#         # Use .get to access a single object's properties. .filter will return a queryset
-#         user = Creative.objects.get(username=request.data["username"])
-#         print('USER', user.username)
-#         if bcrypt.checkpw(request.data['password'].encode(), user.password.encode()):
-#             print(True)
-#         else:
-#             print(False)
-#         return Response(request.data)
+
+class PaymentList(APIView):
+
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        test_payment_intent = stripe.PaymentIntent.create(
+            amount=1000,
+            currency='usd',
+            payment_method_types=['card'],
+            receipt_email='nesmith.charlesii@gmail.com')
+        return Response(status=status.HTTP_200_OK, data=test_payment_intent)
+
+
+def save_stripe_info(request):
+    data = request.data
+    email = data['email']
+    payment_method_id = data['payment_method_id']
+
+    # creating customer
+    customer = stripe.Customer.create(email=email, payment_method=payment_method_id)
+
+    return Response(data={'message': 'Success', 'data': {'customer_id': customer.id}}, status=status.HTTP_200_OK)
