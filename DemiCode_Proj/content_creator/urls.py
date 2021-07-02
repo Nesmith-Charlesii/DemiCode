@@ -23,5 +23,6 @@ urlpatterns = [
     path('token-auth/', obtain_jwt_token),
     path('current_user/', views.current_user),
     path('users/', views.UserList.as_view()),
-    path('test_payment/', views.PaymentList.as_view())
+    path('test_payment/', views.PaymentList.as_view()),
+    path('save_stripe_info/', views.Save_Stripe_Info.as_view())
 ]

@@ -9,7 +9,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 import stripe
-stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
+# "SECRET" test key from stripe quickstart link
+stripe.api_key = "sk_test_51J8TYoEbNvMl2Uk9yxkCLEMt2qARtRueHGEwR1ui5LkPFkKWAs6ffs6QoKfzl7lMyGWawv5eYrNatM6EJ4hIRDMF00OzJYf54p"
 
 
 @api_view(['GET'])
@@ -287,12 +288,16 @@ class PaymentList(APIView):
         return Response(status=status.HTTP_200_OK, data=test_payment_intent)
 
 
-def save_stripe_info(request):
-    data = request.data
-    email = data['email']
-    payment_method_id = data['payment_method_id']
+class Save_Stripe_Info(APIView):
 
-    # creating customer
-    customer = stripe.Customer.create(email=email, payment_method=payment_method_id)
+    permission_classes = [permissions.AllowAny]
 
-    return Response(data={'message': 'Success', 'data': {'customer_id': customer.id}}, status=status.HTTP_200_OK)
+    def post(self, request):
+        data = request.data
+        email = data['email']
+        payment_method_id = data['payment_method_id']
+
+        # creating customer
+        customer = stripe.Customer.create(email=email, payment_method=payment_method_id)
+
+        return Response(data={'message': 'Success', 'data': {'customer_id': customer.id}}, status=status.HTTP_200_OK)
