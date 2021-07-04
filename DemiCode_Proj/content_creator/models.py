@@ -9,7 +9,7 @@ class Image(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __repr__(self):
-        return f'Content Creator: {self.User} '
+        return f'Content Creator: {self.user} '
 
 
 class Bank(models.Model):
@@ -19,7 +19,7 @@ class Bank(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __repr__(self):
-        return f'Content Creator: {self.User}'
+        return f'Content Creator: {self.user}'
 
 
 class Blog(models.Model):

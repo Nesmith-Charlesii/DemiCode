@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 import stripe
 # "SECRET" test key from stripe quickstart link
 stripe.api_key = "sk_test_51J8TYoEbNvMl2Uk9yxkCLEMt2qARtRueHGEwR1ui5LkPFkKWAs6ffs6QoKfzl7lMyGWawv5eYrNatM6EJ4hIRDMF00OzJYf54p"
@@ -187,6 +189,7 @@ class Code_SnippetList(APIView):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
         userId = User.objects.get(id=user['id'])
+        print(request.data)
         snippetSerializer = Code_SnippetSerializer(data=request.data)
         if snippetSerializer.is_valid():
             snippetSerializer.validated_data['creator'] = userId
