@@ -58,19 +58,22 @@ class BlogList(APIView):
         return Response(blogSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
-        blogs = Blog.objects.all()
-        serializer = BlogSerializer(blogs, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class BlogList2(APIView):
-    def get(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
         print(f'Blog Detail User Id', user['id'])
         blogs = Blog.objects.filter(creator_id=user['id'])
         blogSerializer = BlogSerializer(blogs, many=True)
         return Response(blogSerializer.data, status=status.HTTP_200_OK)
+
+
+class BlogList2(APIView):
+
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        blogs = Blog.objects.all()
+        serializer = BlogSerializer(blogs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class BlogDetail(APIView):
@@ -106,18 +109,19 @@ class Digital_ProductList(APIView):
         return Response(productSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
-        products = Digital_Product.objects.all()
-        serializer = Digital_ProductSerializer(products, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class Digital_ProductList2(APIView):
-    def get(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
         products = Digital_Product.objects.filter(seller_id=user['id'])
         productSerializer = Digital_ProductSerializer(products, many=True)
         return Response(productSerializer.data, status=status.HTTP_200_OK)
+
+
+class Digital_ProductList2(APIView):
+
+    def get(self, request):
+        products = Digital_Product.objects.all()
+        serializer = Digital_ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class Digital_ProductDetail(APIView):
@@ -191,18 +195,19 @@ class Code_SnippetList(APIView):
         return Response(snippetSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
-        snippets = Code_Snippet.objects.all()
-        serializer = Code_SnippetSerializer(snippets, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class Code_SnippetList2(APIView):
-    def get(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
         snippets = Code_Snippet.objects.filter(creator_id=user['id'])
         snippetSerializer = Digital_ProductSerializer(snippets, many=True)
         return Response(snippetSerializer.data, status=status.HTTP_200_OK)
+
+
+class Code_SnippetList2(APIView):
+
+    def get(self, request):
+        snippets = Code_Snippet.objects.all()
+        serializer = Code_SnippetSerializer(snippets, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class Code_SnippetDetail(APIView):
@@ -240,18 +245,19 @@ class VideoList(APIView):
         return Response(videoSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
-        videos = Video.objects.all()
-        serializer = VideoSerializer(videos, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class VideoList2(APIView):
-    def get(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
         videos = Video.objects.filter(creator_id=user['id'])
         videoSerializer = VideoSerializer(videos, many=True)
         return Response(videoSerializer.data, status=status.HTTP_200_OK)
+
+
+class VideoList2(APIView):
+
+    def get(self, request):
+        videos = Video.objects.all()
+        serializer = VideoSerializer(videos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class VideoDetail(APIView):
