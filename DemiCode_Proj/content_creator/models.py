@@ -66,7 +66,7 @@ class Review(models.Model):
 class Code_Snippet(models.Model):
     title = models.CharField(max_length=50)
     text = models.TextField()
-    upload = models.ImageField(upload_to='images/', null=True)
+    upload = models.ImageField(upload_to='images/', null=True, blank=True)
     creator = models.ForeignKey(User, related_name="snippets", on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

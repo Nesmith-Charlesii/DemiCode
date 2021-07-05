@@ -5,8 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from django.contrib.auth.models import User
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
 from rest_framework.decorators import api_view
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -27,8 +26,7 @@ class UserList(APIView):
 
     permission_classes = [permissions.AllowAny]
 
-    @staticmethod
-    def post(request, format=None):
+    def post(self, request, format=None):
         serializer = UserSerializerWithToken(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -37,7 +35,7 @@ class UserList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(request):
+    def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -51,6 +49,7 @@ class BlogList(APIView):
         print(f'Blog User Id', user['id'])
         # To attach User Id to Blog model as FK, userID must be from an instance of the User class
         userId = User.objects.get(id=user['id'])
+        print(userId.first_name)
         blogSerializer = BlogSerializer(data=request.data)
         if blogSerializer.is_valid():
             # Attach user's id to FK of new blog that is about to be created
@@ -185,6 +184,8 @@ class ReviewDetail(APIView):
 
 class Code_SnippetList(APIView):
 
+    parser_classes = [MultiPartParser, FormParser]
+
     def post(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
@@ -206,6 +207,8 @@ class Code_SnippetList(APIView):
 
 
 class Code_SnippetList2(APIView):
+
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         snippets = Code_Snippet.objects.all()
@@ -235,6 +238,8 @@ class Code_SnippetDetail(APIView):
 
 
 class VideoList(APIView):
+    
+    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
         userSerializer = UserSerializer(request.user)
