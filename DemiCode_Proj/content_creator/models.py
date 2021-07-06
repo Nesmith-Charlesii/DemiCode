@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Image(models.Model):
-    photo_upload = models.ImageField(upload_to='images/', null=True, blank=True)
+    photo_upload = models.ImageField(upload_to='images/', null=True, blank=True, default='default.png')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
