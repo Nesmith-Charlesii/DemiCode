@@ -31,7 +31,7 @@ class UserList(APIView):
         if serializer.is_valid():
             serializer.save()
             data = serializer.data
-            print(data['first_name'])
+            # print(data['first_name'])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -46,7 +46,7 @@ class BlogList(APIView):
     def post(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
-        print(f'Blog User Id', user['id'])
+        # print(f'Blog User Id', user['id'])
         # To attach User Id to Blog model as FK, userID must be from an instance of the User class
         userId = User.objects.get(id=user['id'])
         print(userId.first_name)
@@ -61,7 +61,7 @@ class BlogList(APIView):
     def get(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
-        print(f'Blog Detail User Id', user['id'])
+        # print(f'Blog Detail User Id', user['id'])
         blogs = Blog.objects.filter(creator_id=user['id'])
         blogSerializer = BlogSerializer(blogs, many=True)
         return Response(blogSerializer.data, status=status.HTTP_200_OK)
@@ -100,7 +100,7 @@ class Digital_ProductList(APIView):
     def post(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
-        print(f'Blog User Id', user['id'])
+        # print(f'Blog User Id', user['id'])
         userId = User.objects.get(id=user['id'])
         productSerializer = Digital_ProductSerializer(data=request.data)
         if productSerializer.is_valid():
@@ -190,7 +190,7 @@ class Code_SnippetList(APIView):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
         userId = User.objects.get(id=user['id'])
-        print(request.data)
+        # print(request.data)
         snippetSerializer = Code_SnippetSerializer(data=request.data)
         if snippetSerializer.is_valid():
             snippetSerializer.validated_data['creator'] = userId
@@ -238,7 +238,7 @@ class Code_SnippetDetail(APIView):
 
 
 class VideoList(APIView):
-    
+
     parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
@@ -262,8 +262,12 @@ class VideoList(APIView):
 
 class VideoList2(APIView):
 
+    permission_classes = [permissions.AllowAny]
+
     def get(self, request):
         videos = Video.objects.all()
+        for video in videos:
+            print(video.video)
         serializer = VideoSerializer(videos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -332,3 +336,28 @@ class Save_Stripe_Info(APIView):
         )
 
         return Response(data={'message': 'Success', 'data': {'customer_id': customer.id, 'extra_msg': extra_msg}}, status=status.HTTP_200_OK)
+
+
+class ImageList(APIView):
+
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request):
+        userSerializer = UserSerializer(request.user)
+        user = userSerializer.data
+        userId = User.objects.get(id=user['id'])
+        # print(request.data)
+        imageSerializer = ImageSerializer(data=request.data)
+        if imageSerializer.is_valid():
+            imageSerializer.validated_data['user'] = userId
+            imageSerializer.save()
+            return Response(imageSerializer.data, status=status.HTTP_201_CREATED)
+        return Response(imageSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        userSerializer = UserSerializer(request.user)
+        user = userSerializer.data
+        image = Image.objects.get(user_id=user['id'])
+        imageSerializer = ImageSerializer(image)
+        return Response(imageSerializer.data, status=status.HTTP_200_OK)
+
