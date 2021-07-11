@@ -6,6 +6,7 @@ from rest_framework import status, permissions
 from django.contrib.auth.models import User
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import api_view
+from django.conf import settings
 import stripe
 # "SECRET" test key from stripe quickstart link
 stripe.api_key = "sk_test_51J8TYoEbNvMl2Uk9yxkCLEMt2qARtRueHGEwR1ui5LkPFkKWAs6ffs6QoKfzl7lMyGWawv5eYrNatM6EJ4hIRDMF00OzJYf54p"
@@ -357,9 +358,10 @@ class ImageList(APIView):
         image = Image.objects.filter(user_id=user['id']).first()
         print(image)
         if image is None:
-            image = Image.objects.filter(photo_upload='images/default_RH5mJo3.png').first()
-            imageSerializer = ImageSerializer(image)
-            return Response(imageSerializer.data, status=status.HTTP_200_OK)
+            media_url = settings.MEDIA_URL
+            path_to_user_folder = media_url + "images/user.png"
+            print(path_to_user_folder)
+            return Response(path_to_user_folder, status=status.HTTP_200_OK)
         imageSerializer = ImageSerializer(image)
         return Response(imageSerializer.data, status=status.HTTP_200_OK)
 
