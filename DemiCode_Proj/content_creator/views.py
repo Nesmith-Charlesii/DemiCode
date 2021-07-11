@@ -356,6 +356,10 @@ class ImageList(APIView):
         user = userSerializer.data
         image = Image.objects.filter(user_id=user['id']).first()
         print(image)
+        if image is None:
+            image = Image.objects.filter(photo_upload='images/default_RH5mJo3.png').first()
+            imageSerializer = ImageSerializer(image)
+            return Response(imageSerializer.data, status=status.HTTP_200_OK)
         imageSerializer = ImageSerializer(image)
         return Response(imageSerializer.data, status=status.HTTP_200_OK)
 
