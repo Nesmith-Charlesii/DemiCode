@@ -200,7 +200,7 @@ class Code_SnippetList(APIView):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
         snippets = Code_Snippet.objects.filter(creator_id=user['id'])
-        snippetSerializer = Digital_ProductSerializer(snippets, many=True)
+        snippetSerializer = Code_SnippetSerializer(snippets, many=True)
         return Response(snippetSerializer.data, status=status.HTTP_200_OK)
 
 
