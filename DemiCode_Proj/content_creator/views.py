@@ -1,14 +1,11 @@
-from django.shortcuts import render
 from .models import Image, Bank, Blog, Digital_Product, Review, Video, Code_Snippet
-from .serializers import ImageSerializer, BankSerializer, BlogSerializer, Digital_ProductSerializer, ReviewSerializer, VideoSerializer, Code_SnippetSerializer, UserSerializer, UserSerializerWithToken
+from .serializers import ImageSerializer, BlogSerializer, Digital_ProductSerializer, ReviewSerializer, VideoSerializer, Code_SnippetSerializer, UserSerializer, UserSerializerWithToken
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from django.contrib.auth.models import User
-from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import api_view
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
 import stripe
 # "SECRET" test key from stripe quickstart link
 stripe.api_key = "sk_test_51J8TYoEbNvMl2Uk9yxkCLEMt2qARtRueHGEwR1ui5LkPFkKWAs6ffs6QoKfzl7lMyGWawv5eYrNatM6EJ4hIRDMF00OzJYf54p"
@@ -357,7 +354,8 @@ class ImageList(APIView):
     def get(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
-        image = Image.objects.get(user_id=user['id'])
+        image = Image.objects.filter(user_id=user['id']).first()
+        print(image)
         imageSerializer = ImageSerializer(image)
         return Response(imageSerializer.data, status=status.HTTP_200_OK)
 
