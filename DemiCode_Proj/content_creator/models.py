@@ -38,7 +38,7 @@ class Blog(models.Model):
 class Digital_Product(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='images/', null=True)
+    image = models.ImageField(upload_to='images/', null=True, blank=True)
     price = models.FloatField()
     seller = models.ForeignKey(User, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

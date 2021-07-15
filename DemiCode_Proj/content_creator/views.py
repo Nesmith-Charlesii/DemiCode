@@ -96,7 +96,7 @@ class BlogDetail(APIView):
 class Digital_ProductList(APIView):
 
     parser_classes = [MultiPartParser, FormParser]
-    
+
     def post(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
