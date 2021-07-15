@@ -41,6 +41,8 @@ class UserList(APIView):
 
 class BlogList(APIView):
 
+    parser_classes = [MultiPartParser, FormParser]
+
     def post(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
@@ -118,7 +120,7 @@ class Digital_ProductList(APIView):
 
 
 class Digital_ProductList2(APIView):
-    
+
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
