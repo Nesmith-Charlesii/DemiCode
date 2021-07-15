@@ -118,6 +118,8 @@ class Digital_ProductList(APIView):
 
 
 class Digital_ProductList2(APIView):
+    
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         products = Digital_Product.objects.all()
