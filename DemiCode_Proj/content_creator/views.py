@@ -16,7 +16,7 @@ stripe.api_key = "sk_test_51J8TYoEbNvMl2Uk9yxkCLEMt2qARtRueHGEwR1ui5LkPFkKWAs6ff
 def current_user(request):
     # Determine current user by their token.
     serializer = UserSerializer(request.user)
-    print(serializer)
+    # print('CURRENT USER', serializer)
     return Response(serializer.data)
 
 
@@ -95,6 +95,8 @@ class BlogDetail(APIView):
 
 class Digital_ProductList(APIView):
 
+    parser_classes = [MultiPartParser, FormParser]
+    
     def post(self, request):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
