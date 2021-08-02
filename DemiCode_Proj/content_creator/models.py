@@ -26,7 +26,7 @@ class Blog(models.Model):
     title = models.CharField(max_length=50)
     # TextField increases in size. Does not need a max limit
     content = models.TextField()
-    header_image = models.ImageField(upload_to='images/', null=True)
+    header_image = models.ImageField(upload_to='images/', null=True, blank=True)
     creator = models.ForeignKey(User, related_name="articles", on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

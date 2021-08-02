@@ -51,6 +51,7 @@ class BlogList(APIView):
         userId = User.objects.get(id=user['id'])
         print(userId.first_name)
         blogSerializer = BlogSerializer(data=request.data)
+        print('Blog Serializer', blogSerializer)
         if blogSerializer.is_valid():
             # Attach user's id to FK of new blog that is about to be created
             blogSerializer.validated_data['creator'] = userId
