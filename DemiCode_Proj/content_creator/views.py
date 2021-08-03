@@ -351,8 +351,11 @@ class ImageList(APIView):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
         userId = User.objects.get(id=user['id'])
+        current_images = Image.objects.filter(user_id=userId).values_list('photo_upload')
+        print('current_image', current_images)
         # print(request.data)
         imageSerializer = ImageSerializer(data=request.data)
+        print(imageSerializer)
         if imageSerializer.is_valid():
             imageSerializer.validated_data['user'] = userId
             imageSerializer.save()
