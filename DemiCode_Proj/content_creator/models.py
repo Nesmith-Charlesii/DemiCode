@@ -14,7 +14,7 @@ class Image(models.Model):
 
 class Bank(models.Model):
     debit_card = models.BigIntegerField(null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

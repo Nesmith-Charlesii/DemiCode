@@ -197,6 +197,7 @@ class Code_SnippetList(APIView):
         userId = User.objects.get(id=user['id'])
         # print(request.data)
         snippetSerializer = Code_SnippetSerializer(data=request.data)
+        print(snippetSerializer)
         if snippetSerializer.is_valid():
             snippetSerializer.validated_data['creator'] = userId
             snippetSerializer.save()
@@ -351,8 +352,8 @@ class ImageList(APIView):
         userSerializer = UserSerializer(request.user)
         user = userSerializer.data
         userId = User.objects.get(id=user['id'])
-        current_images = Image.objects.filter(user_id=userId).values_list('photo_upload')
-        print('current_image', current_images)
+        # current_image = Image.objects.filter(user_id=userId).filter().only('id').delete()
+        
         # print(request.data)
         imageSerializer = ImageSerializer(data=request.data)
         print(imageSerializer)
