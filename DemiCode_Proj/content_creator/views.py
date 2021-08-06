@@ -200,6 +200,7 @@ class Code_SnippetList(APIView):
         print(snippetSerializer)
         if snippetSerializer.is_valid():
             snippetSerializer.validated_data['creator'] = userId
+            print('Validated Snippet', snippetSerializer.validated_data)
             snippetSerializer.save()
             return Response(snippetSerializer.data, status=status.HTTP_201_CREATED)
         return Response(snippetSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -353,7 +354,7 @@ class ImageList(APIView):
         user = userSerializer.data
         userId = User.objects.get(id=user['id'])
         # current_image = Image.objects.filter(user_id=userId).filter().only('id').delete()
-        
+
         # print(request.data)
         imageSerializer = ImageSerializer(data=request.data)
         print(imageSerializer)
